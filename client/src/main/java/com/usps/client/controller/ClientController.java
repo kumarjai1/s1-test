@@ -32,36 +32,18 @@ public class ClientController {
     }
 
     @PostMapping("shipment/addshipment")
-    public String addShipment (@RequestBody Integer trackingNumber, String details) throws JsonProcessingException {
-
-        final String uri = "http://localhost:9001/shipment/addshipment";
+    public ShipmentBean addShipment (@RequestBody ShipmentBean shipment) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = createShipmentInJson(trackingNumber, details);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(json, httpHeaders);
-        String result = restTemplate.postForObject(uri, entity, String.class);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> entity = new HttpEntity<>(shipment.toString(), httpHeaders);
-//        ShipmentBean res = restTemplate.postForObject("http://localhost:9001/shipment/addshipment", entity, ShipmentBean.class);
-//        JsonNode json = objectMapper.readTree(String.valueOf(res));
-//        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//        String json = objectWriter.writeValueAsString(res);
-//        String json = objectMapper.writeValueAsString(res);
-
-//        System.out.println(json);
-//        System.out.println(res);
-        return result;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<ShipmentBean> entity = new HttpEntity<ShipmentBean>(shipment,headers);
+        ShipmentBean createdShipment = restTemplate.exchange("http://localhost:9001/shipment/addshipment", HttpMethod.POST, entity, ShipmentBean.class).getBody();
+        return createdShipment;
     }
 
-    private static String createShipmentInJson(Integer trackingNumber, String details) {
-        return "{ \"trackingNumber\": \"" + trackingNumber + "\", " +
-                "\"details\":\"" + details + "\"}";
-    }
+//    private static String createShipmentInJson(Integer trackingNumber, String details) {
+//        return "{ \"trackingNumber\": \"" + trackingNumber + "\", " +
+//                "\"details\":\"" + details + "\"}";
+//    }
 
 }

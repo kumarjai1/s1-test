@@ -2,20 +2,29 @@ package com.usps.client.model;
 
 public class ShipmentBean {
 
-    public Integer trackingNumber;
-    public String details;
+    private Long id;
 
-    public ShipmentBean(Integer trackingNumber, String details) {
 
-        this.trackingNumber = trackingNumber;
-        this.details = details;
+
+    private String details;
+
+    private Long trackingNumber;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public Integer getTrackingNumber() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public Long getTrackingNumber() {
         return trackingNumber;
     }
 
-    public void setTrackingNumber(Integer trackingNumber) {
+    public void setTrackingNumber(Long trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
 
