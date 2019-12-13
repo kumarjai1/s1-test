@@ -1,6 +1,7 @@
 package com.usps.client.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.usps.client.model.ShipmentBean;
@@ -31,21 +32,36 @@ public class ClientController {
     }
 
     @PostMapping("shipment/addshipment")
-    public ShipmentBean addShipment (@RequestBody ShipmentBean shipment) {
-//        /ObjectMapper objectMapper = new ObjectMapper();
+    public String addShipment (@RequestBody Integer trackingNumber, String details) throws JsonProcessingException {
 
+        final String uri = "http://localhost:9001/shipment/addshipment";
         RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = createShipmentInJson(trackingNumber, details);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<ShipmentBean> entity = new HttpEntity<>(shipment, httpHeaders);
-        ShipmentBean res = restTemplate.postForObject("http://localhost:9001/shipment/addshipment", HttpMethod.POST, ShipmentBean.class);
-
+        HttpEntity<String> entity = new HttpEntity<>(json, httpHeaders);
+        String result = restTemplate.postForObject(uri, entity, String.class);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<String> entity = new HttpEntity<>(shipment.toString(), httpHeaders);
+//        ShipmentBean res = restTemplate.postForObject("http://localhost:9001/shipment/addshipment", entity, ShipmentBean.class);
+//        JsonNode json = objectMapper.readTree(String.valueOf(res));
 //        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 //        String json = objectWriter.writeValueAsString(res);
 //        String json = objectMapper.writeValueAsString(res);
 
 //        System.out.println(json);
-        return res;
+//        System.out.println(res);
+        return result;
+    }
+
+    private static String createShipmentInJson(Integer trackingNumber, String details) {
+        return "{ \"trackingNumber\": \"" + trackingNumber + "\", " +
+                "\"details\":\"" + details + "\"}";
     }
 
 }
